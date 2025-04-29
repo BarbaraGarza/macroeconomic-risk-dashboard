@@ -18,6 +18,7 @@ This Power BI dashboard tracks macroeconomic risk in the United States using 6 k
 
 ## 📁 Files
 - `Macroeconomic_Risk_Tracker.pbix` – Full Power BI file
+- `Macroeconomic_Risk_Master_Table.xlsx` — Original Excel file used to build the dashboard
 - `Dashboard_Screenshot.png` – Visual preview
 - `Dashboard_Export.pdf` – Static PDF version (optional)
 
