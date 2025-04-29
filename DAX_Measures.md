@@ -6,6 +6,7 @@ This document contains custom DAX logic used to calculate dynamic scores, toolti
 
 # Indicator Glossary
 ---
+```DAX
 IndicatorGlossary = 
 DATATABLE(
     "Indicator", STRING,
