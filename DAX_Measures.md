@@ -4,8 +4,7 @@ This document contains custom DAX logic used to calculate dynamic scores, toolti
 
 ---
 
-# Indicator Glossary
----
+
 ```DAX
 IndicatorGlossary = 
 DATATABLE(
@@ -21,8 +20,7 @@ DATATABLE(
     }
 )
 
-# Indicator Labels
----
+
 IndicatorLabels = 
 DATATABLE(
     "Indicator", STRING,
@@ -36,8 +34,7 @@ DATATABLE(
     }
 )
 
-# Primary Risk Source
----
+
 Primary Risk Source Explanation = 
 VAR TopIndicator =
     CALCULATE(
@@ -54,14 +51,14 @@ RETURN
     ", which triggered " & TriggerNumber & " times from January 2020 to January 2025. " &
     "This indicates the most persistent source of macroeconomic risk during the analysis period."
 
-# Primary Risk Trigger Count
----
+
 Primary Risk Trigger Count = 
 VAR TopIndicator =
     CALCULATE(
         MAX('IndicatorTriggerCounts'[Indicator]),
         TOPN(1, 'IndicatorTriggerCounts', 'IndicatorTriggerCounts'[TriggerCount], DESC)
     )
+
 VAR TriggerNumber = 
     CALCULATE(
         MAX('IndicatorTriggerCounts'[TriggerCount]),
@@ -69,6 +66,7 @@ VAR TriggerNumber =
     )
 RETURN
     TriggerNumber
+
 Risk Contribution % = 
 SWITCH(
     SELECTEDVALUE(IndicatorLabels[Indicator]),
@@ -80,6 +78,7 @@ SWITCH(
     "Retail", [Retail Contribution %],
     BLANK()
 )
+
 Risk Level Explanation = 
 VAR LatestDate = MAX('Sheet1'[Date])
 VAR Score = CALCULATE(MAX('Sheet1'[Total Risk Score]), 'Sheet1'[Date] = LatestDate)
@@ -90,6 +89,7 @@ RETURN
         Score <= 4, "Moderate Risk ⚠️ — Caution advised. Some indicators are signaling concern.",
         "High Risk 🚨 — Significant macroeconomic instability detected."
     )
+
 Total Risk Score Explanation = 
 VAR LatestDate = MAX('Sheet1'[Date])
 VAR Score = CALCULATE(MAX('Sheet1'[Total Risk Score]), 'Sheet1'[Date] = LatestDate)
@@ -97,6 +97,7 @@ RETURN
     "The sum of all active risk signals this month. " &
     "Maximum score is 6 — one point per indicator. " &
     "This month, " & Score & " risk indicators are active."
+
 IndicatorTriggerCounts = 
 UNION(
     ROW("Indicator", "CPI", "TriggerCount", SUM('Sheet1'[CPI Risk])),
@@ -106,24 +107,28 @@ UNION(
     ROW("Indicator", "Confidence", "TriggerCount", SUM('Sheet1'[Consumer Confidence Risk])),
     ROW("Indicator", "Retail", "TriggerCount", SUM('Sheet1'[Retail Sales Risk]))
 )
+
 Confidence Contribution % = 
 VAR LatestDate = MAX('Sheet1'[Date])
 VAR Confidence = CALCULATE(MAX('Sheet1'[Consumer Confidence Risk]), 'Sheet1'[Date] = LatestDate)
 VAR Total = CALCULATE(MAX('Sheet1'[Total Risk Score]), 'Sheet1'[Date] = LatestDate)
 RETURN
     DIVIDE(Confidence, Total) * 100
+
 CPI Contribution % = 
 VAR LatestDate = MAX('Sheet1'[Date])
 VAR CPI = CALCULATE(MAX('Sheet1'[CPI Risk]), 'Sheet1'[Date] = LatestDate)
 VAR Total = CALCULATE(MAX('Sheet1'[Total Risk Score]), 'Sheet1'[Date] = LatestDate)
 RETURN
     DIVIDE(CPI, Total) * 100
+
 GDP Contribution % = 
 VAR LatestDate = MAX('Sheet1'[Date])
 VAR GDP = CALCULATE(MAX('Sheet1'[GDP Risk]), 'Sheet1'[Date] = LatestDate)
 VAR Total = CALCULATE(MAX('Sheet1'[Total Risk Score]), 'Sheet1'[Date] = LatestDate)
 RETURN
     DIVIDE(GDP, Total) * 100
+
 Most Triggered Indicator = 
 VAR TopIndicator =
     TOPN(
@@ -134,24 +139,28 @@ VAR TopIndicator =
     )
 RETURN
     MAXX(TopIndicator, IndicatorTriggerCounts[Indicator])
+
 Retail Contribution % = 
 VAR LatestDate = MAX('Sheet1'[Date])
 VAR Retail = CALCULATE(MAX('Sheet1'[Retail Sales Risk]), 'Sheet1'[Date] = LatestDate)
 VAR Total = CALCULATE(MAX('Sheet1'[Total Risk Score]), 'Sheet1'[Date] = LatestDate)
 RETURN
     DIVIDE(Retail, Total) * 100
+
 Unemployment Contribution % = 
 VAR LatestDate = MAX('Sheet1'[Date])
 VAR Unemployment = CALCULATE(MAX('Sheet1'[Unemployment Risk]), 'Sheet1'[Date] = LatestDate)
 VAR Total = CALCULATE(MAX('Sheet1'[Total Risk Score]), 'Sheet1'[Date] = LatestDate)
 RETURN
     DIVIDE(Unemployment, Total) * 100
+
 Yield Curve Contribution % = 
 VAR LatestDate = MAX('Sheet1'[Date])
 VAR YieldCurve = CALCULATE(MAX('Sheet1'[Yield Curve Risk]), 'Sheet1'[Date] = LatestDate)
 VAR Total = CALCULATE(MAX('Sheet1'[Total Risk Score]), 'Sheet1'[Date] = LatestDate)
 RETURN
     DIVIDE(YieldCurve, Total) * 100
+
 Latest Total Risk Score = 
 VAR LatestDate = MAX('Sheet1'[Date])
 RETURN
