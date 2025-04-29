@@ -4,6 +4,8 @@ This document contains custom DAX logic used to calculate dynamic scores, toolti
 
 ---
 
+# Indicator Glossary
+---
 IndicatorGlossary = 
 DATATABLE(
     "Indicator", STRING,
@@ -17,6 +19,9 @@ DATATABLE(
         {"Retail Sales", "Indicates consumer spending behavior, often tied to economic activity."}
     }
 )
+
+# Indicator Labels
+---
 IndicatorLabels = 
 DATATABLE(
     "Indicator", STRING,
@@ -29,6 +34,9 @@ DATATABLE(
         {"Retail"}
     }
 )
+
+# Primary Risk Source
+---
 Primary Risk Source Explanation = 
 VAR TopIndicator =
     CALCULATE(
@@ -44,6 +52,9 @@ RETURN
     "The Primary Risk Source is " & TopIndicator & 
     ", which triggered " & TriggerNumber & " times from January 2020 to January 2025. " &
     "This indicates the most persistent source of macroeconomic risk during the analysis period."
+
+# Primary Risk Trigger Count
+---
 Primary Risk Trigger Count = 
 VAR TopIndicator =
     CALCULATE(
